@@ -41,11 +41,15 @@ CREATE TABLE IF NOT EXISTS receipts (
     FOREIGN KEY (p_no) REFERENCES people(p_no) ON DELETE CASCADE
 );
 
--- Insert default admin user
-INSERT INTO people (fname, lname, phone, email, password, role) 
-VALUES ('Admin', 'User', '123456789', 'admin@somalifitness.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin')
-ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
--- Default password is 'password'
+-- Attendance table
+CREATE TABLE IF NOT EXISTS attendance (
+    a_no INT AUTO_INCREMENT PRIMARY KEY,
+    p_no INT NOT NULL,
+    check_in DATETIME NOT NULL,
+    check_out DATETIME,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (p_no) REFERENCES people(p_no) ON DELETE CASCADE
+);
 
 -- Create indexes
 CREATE INDEX idx_people_role ON people(role);
@@ -53,3 +57,11 @@ CREATE INDEX idx_people_status ON people(status);
 CREATE INDEX idx_people_membership ON people(membership_end);
 CREATE INDEX idx_measurements_date ON measurements(created_at);
 CREATE INDEX idx_receipts_date ON receipts(created_at);
+CREATE INDEX idx_attendance_date ON attendance(check_in);
+CREATE INDEX idx_attendance_member ON attendance(p_no);
+
+-- Insert default admin user
+INSERT INTO people (fname, lname, phone, email, password, role) 
+VALUES ('Admin', 'User', '123456789', 'admin@somalifitness.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin')
+ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
+-- Default password is 'password'
