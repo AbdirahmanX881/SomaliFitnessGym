@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS people (
     role ENUM('admin', 'staff', 'member') NOT NULL DEFAULT 'member',
     status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     membership_end DATE,    -- For members only
+    membership_type ENUM('strength', 'cardio', 'weight_loss', 'yoga', 'other') DEFAULT 'other',
+    last_login TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
