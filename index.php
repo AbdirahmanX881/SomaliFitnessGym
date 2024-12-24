@@ -252,7 +252,7 @@ session_start();
 
     <!-- Footer Section -->
     <div class="footer">
-        <p>Contact Us | <a href="mailto:info@somalifitness.com">info@somalifitness.com</a> | +252 61 XXX XXXX</p>
+        <p>Contact Us | <a href="mailto:info@somalifitness.com">info@somalifitness.com</a> | +252 61 770555718</p>
         <p>Follow Us: <a href="#" target="_blank">Facebook</a> | <a href="#" target="_blank">Instagram</a> | <a href="#" target="_blank">Twitter</a></p>
     </div>
 
