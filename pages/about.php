@@ -9,6 +9,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
+        /* Dark mode style */
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #1e1e1e;
+        }
+        .navbar .navbar-brand, .navbar-nav .nav-link {
+            color: #fff;
+        }
+        .navbar .navbar-nav .nav-link:hover {
+            color: #f1f1f1;
+        }
+
+        /* Card style */
+        .card {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+            border: 1px solid #333;
+        }
+
+        .card-title {
+            color: #fff;
+        }
+
+        /* Team Member */
         .team-member {
             text-align: center;
             margin-bottom: 30px;
@@ -21,17 +50,74 @@
         }
         .team-member h5 {
             margin-top: 10px;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: bold;
+            color: #fff;
         }
         .team-member p {
             font-size: 1rem;
-            color: #555;
+            color: #bbb;
         }
-        .social-links i {
+
+        .social-links a {
             margin: 0 10px;
             font-size: 1.5rem;
+            color: #f1f1f1;
+        }
+        .social-links a:hover {
+            color: #ff9800;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1e1e1e;
+            color: #fff;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* Dark Mode Toggle Button */
+        .toggle-btn {
+            background-color: #ff9800;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .toggle-btn:hover {
+            background-color: #e68900;
+        }
+
+        /* Light Mode */
+        .light-mode {
+            background-color: #fff;
             color: #333;
+        }
+
+        .light-mode .navbar {
+            background-color: #f8f9fa;
+        }
+        .light-mode .card {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .light-mode .team-member h5 {
+            color: #333;
+        }
+        .light-mode .team-member p {
+            color: #555;
+        }
+        .light-mode .social-links a {
+            color: #333;
+        }
+        .light-mode .social-links a:hover {
+            color: #ff9800;
         }
     </style>
 </head>
@@ -107,11 +193,24 @@
                                 <li><i class="fas fa-map-marker-alt me-2"></i> Mogadishu, Somalia</li>
                             </ul>
                         </div>
+
+                        <!-- Dark Mode Toggle Button -->
+                        <button class="toggle-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; 2024 Somali Fitness Gym. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

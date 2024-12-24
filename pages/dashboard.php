@@ -147,6 +147,72 @@ if ($result) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background-color: #f9f9f9;
+            color: #2c3e50;
+        }
+
+        .card {
+            background-color: #fff;
+            border: 1px solid #ecf0f1;
+        }
+
+        .card-header, .card-body {
+            background-color: #fff;
+        }
+
+        .btn-outline-secondary {
+            color: #2c3e50;
+            border-color: #ecf0f1;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f1f1f1;
+        }
+
+        .text-primary {
+            color: #3498db;
+        }
+
+        .text-info {
+            color: #1abc9c;
+        }
+
+        .text-warning {
+            color: #f39c12;
+        }
+
+        .text-success {
+            color: #2ecc71;
+        }
+
+        .text-gray-800 {
+            color: #34495e;
+        }
+
+        .chart-container {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .row {
+            margin-bottom: 30px;
+        }
+
+        /* Smaller chart sizes */
+        .chart-container canvas {
+            max-height: 250px;
+        }
+
+        .col-md-4 {
+            flex: 0 0 auto;
+            width: 33.33%;
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -239,37 +305,35 @@ if ($result) {
 
                 <!-- Charts Row -->
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Membership Distribution</h6>
                             </div>
-                            <div class="card-body">
-                                <canvas id="membershipDistributionChart" height="300"></canvas>
+                            <div class="card-body chart-container">
+                                <canvas id="membershipDistributionChart" height="200"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Monthly Revenue</h6>
                             </div>
-                            <div class="card-body">
-                                <canvas id="monthlyRevenueChart" height="300"></canvas>
+                            <div class="card-body chart-container">
+                                <canvas id="monthlyRevenueChart" height="200"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Daily Attendance</h6>
                             </div>
-                            <div class="card-body">
-                                <canvas id="dailyAttendanceChart" height="300"></canvas>
+                            <div class="card-body chart-container">
+                                <canvas id="dailyAttendanceChart" height="200"></canvas>
                             </div>
                         </div>
                     </div>
@@ -280,6 +344,50 @@ if ($result) {
 
     <script>
         // Membership Distribution Chart
-        var membershipCtx = document.getElementById('membershipDistributionChart').getContext('2d');
-        var membershipData = {
-            labels: <?php echo json_encode(array_column($program_distribution, 'program'));
+        const ctx1 = document.getElementById('membershipDistributionChart').getContext('2d');
+        const membershipDistributionChart = new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: <?php echo json_encode(array_column($program_distribution, 'program')); ?>,
+                datasets: [{
+                    data: <?php echo json_encode(array_column($program_distribution, 'count')); ?>,
+                    backgroundColor: ['#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#e74c3c'],
+                    hoverOffset: 4
+                }]
+            }
+        });
+
+        // Monthly Revenue Chart
+        const ctx2 = document.getElementById('monthlyRevenueChart').getContext('2d');
+        const monthlyRevenueChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode(array_column($monthly_revenue, 'month')); ?>,
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: <?php echo json_encode(array_column($monthly_revenue, 'total_revenue')); ?>,
+                    borderColor: '#1abc9c',
+                    backgroundColor: 'rgba(26, 188, 156, 0.2)',
+                    fill: true
+                }]
+            }
+        });
+
+        // Daily Attendance Chart
+        const ctx3 = document.getElementById('dailyAttendanceChart').getContext('2d');
+        const dailyAttendanceChart = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: <?php echo json_encode(array_column($daily_attendance, 'date')); ?>,
+                datasets: [{
+                    label: 'Attendance',
+                    data: <?php echo json_encode(array_column($daily_attendance, 'attendance_count')); ?>,
+                    backgroundColor: '#3498db',
+                    borderColor: '#2980b9',
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
