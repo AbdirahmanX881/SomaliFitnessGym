@@ -154,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="signup-container">
         <div class="signup-header">
-            <img src="../assets/img/logo.png" alt="Somali Fitness Logo">
+            <img src="../assets/icon2.jpg" alt="Somali Fitness Logo">
             <h2>Create an Account</h2>
             <p>Join Somali Fitness today!</p>
         </div>

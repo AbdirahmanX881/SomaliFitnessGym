@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="login-container">
         <div class="login-header">
-            <img src="../assets/img/logo.png" alt="Somali Fitness Logo">
+            <img src="../assets/icon2.jpg" alt="Somali Fitness Logo">
             <h2>Welcome Back</h2>
             <p>Sign in to manage your fitness center</p>
         </div>
