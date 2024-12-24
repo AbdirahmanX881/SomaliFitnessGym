@@ -57,10 +57,100 @@
             <li class="nav-item">
                 <a class="nav-link text-danger" href="logout.php">
                     <i class="fas fa-sign-out-alt me-2"></i>
-                
                     Logout
                 </a>
+            </li>
+            <li class="nav-item">
+                <button class="toggle-dark-mode btn btn-light" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i> Toggle Dark Mode
+                </button>
             </li>
         </ul>
     </div>
 </div>
+
+<!-- JavaScript -->
+<script>
+    // Check if dark mode is already saved in localStorage
+    if (localStorage.getItem('dark-mode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        document.querySelector('.sidebar').classList.add('dark-mode');
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.add('dark-mode');
+        });
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        document.querySelector('.sidebar').classList.toggle('dark-mode');
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('dark-mode');
+        });
+
+        // Save preference in localStorage
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('dark-mode', 'enabled');
+        } else {
+            localStorage.setItem('dark-mode', 'disabled');
+        }
+
+        // Toggle dark mode button style
+        const button = document.querySelector('.toggle-dark-mode');
+        button.classList.toggle('dark-mode');
+    }
+</script>
+
+<!-- CSS for Light and Dark Mode -->
+<style>
+    /* Light Mode (default) */
+    body {
+        background-color: #f8f9fa;
+        color: #212529;
+    }
+
+    .sidebar {
+        background-color:rgb(153, 172, 192);
+        color: #212529;
+    }
+
+    .nav-link {
+        color:rgb(3, 27, 51);
+    }
+
+    .nav-link.active {
+        background-color: #0d6efd;
+        color: #fff;
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+        background-color:rgba(18, 18, 19, 0.18);
+        color:rgb(3, 3, 49);
+    }
+
+    .sidebar.dark-mode {
+        background-color: #212529;
+        color:rgb(1, 10, 20);
+    }
+
+    .nav-link.dark-mode {
+        color:rgb(1, 10, 20);
+    }
+
+    .nav-link.active.dark-mode {
+        background-color: #0d6efd;
+        color: #f8f9fa;
+    }
+
+    /* Button to toggle dark mode */
+    .toggle-dark-mode {
+        background-color: transparent;
+        border: none;
+        color:rgb(2, 18, 33);
+        cursor: pointer;
+    }
+
+    .toggle-dark-mode.dark-mode {
+        color:rgb(3, 18, 33);
+    }
+</style>
