@@ -20,3 +20,4 @@ if (!mysqli_set_charset($conn, "utf8mb4")) {
 
 // Set timezone
 date_default_timezone_set('Africa/Mogadishu');
+

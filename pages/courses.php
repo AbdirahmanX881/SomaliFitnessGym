@@ -1,4 +1,49 @@
-<?php session_start(); ?>
+<?php 
+session_start();
+include 'db_connect.php'; // Add database connection
+
+// Handle course addition (Admin only)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_course'])) {
+    // Get form data
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
+    $icon = $_POST['icon'];
+
+    // Prepare the SQL statement to insert the new course
+    $stmt = $conn->prepare("INSERT INTO courses (name, description, price, icon) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssis", $name, $description, $price, $icon);
+
+    // Execute the query
+    if ($stmt->execute()) {
+        $_SESSION['message'] = "Course added successfully!";
+    } else {
+        $_SESSION['message'] = "Failed to add course.";
+    }
+
+    $stmt->close();
+
+    // Redirect to the courses page
+    header("Location: courses.php");
+    exit;
+}
+
+// Fetch all courses
+$result = $conn->query("SELECT * FROM courses");
+
+
+
+// Debugging: Check if courses are found
+if ($result->num_rows > 0) {
+    // Courses found
+    $courses = $result->fetch_all(MYSQLI_ASSOC);
+} else {
+    // No courses found
+    $courses = [];
+    $_SESSION['message'] = "No courses found.";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,151 +60,68 @@
     <div class="container mt-4">
         <h2 class="text-center mb-4">Our Fitness Programs</h2>
 
+        <!-- Display Success/Failure Message -->
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="alert alert-info">
+                <?php echo $_SESSION['message']; ?>
+                <?php unset($_SESSION['message']); ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Courses List -->
         <div class="row">
-            <!-- Strength Training -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-dumbbell fa-3x text-primary"></i>
+            <?php if (!empty($courses)): ?>
+                <?php foreach ($courses as $course): ?>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <i class="fas <?php echo htmlspecialchars($course['icon']); ?> fa-3x text-primary"></i>
+                                </div>
+                                <h4 class="card-title text-center"><?php echo htmlspecialchars($course['name']); ?></h4>
+                                <p class="card-text"><?php echo htmlspecialchars($course['description']); ?></p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <h5>$<?php echo number_format($course['price'], 2); ?></h5>
+                                <a href="apply.php?course_id=<?php echo $course['id']; ?>" class="btn btn-success">Apply Now</a>
+                            </div>
                         </div>
-                        <h4 class="card-title text-center">Strength Training</h4>
-                        <p class="card-text">Build muscle, increase strength, and improve your overall fitness with our comprehensive strength training program.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i> Professional guidance</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Customized workout plans</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Progress tracking</li>
-                        </ul>
                     </div>
-                    <div class="card-footer text-center">
-                        <h5>$50/month</h5>
-                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12">
+                    <p>No courses available at the moment.</p>
                 </div>
-            </div>
-
-            <!-- Cardio Fitness -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-running fa-3x text-danger"></i>
-                        </div>
-                        <h4 class="card-title text-center">Cardio Fitness</h4>
-                        <p class="card-text">Improve your cardiovascular health and endurance with our specialized cardio programs.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i> Various cardio equipment</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Group classes</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Heart rate monitoring</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer text-center">
-                        <h5>$40/month</h5>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Weight Loss -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-weight-scale fa-3x text-success"></i>
-                        </div>
-                        <h4 class="card-title text-center">Weight Loss Program</h4>
-                        <p class="card-text">Achieve your weight loss goals with our comprehensive program combining exercise and nutrition guidance.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i> Nutrition planning</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Regular assessments</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Support group</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer text-center">
-                        <h5>$60/month</h5>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Personal Training -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-user-tie fa-3x text-info"></i>
-                        </div>
-                        <h4 class="card-title text-center">Personal Training</h4>
-                        <p class="card-text">Get one-on-one attention from our certified trainers to achieve your fitness goals faster.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i> Personalized attention</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Flexible scheduling</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Custom workout plans</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer text-center">
-                        <h5>$30/session</h5>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Yoga Classes -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-pray fa-3x text-warning"></i>
-                        </div>
-                        <h4 class="card-title text-center">Yoga Classes</h4>
-                        <p class="card-text">Find balance and flexibility with our yoga classes suitable for all experience levels.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i> Expert instructors</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Multiple class types</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Meditation sessions</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer text-center">
-                        <h5>$45/month</h5>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Group Classes -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <i class="fas fa-users fa-3x text-secondary"></i>
-                        </div>
-                        <h4 class="card-title text-center">Group Classes</h4>
-                        <p class="card-text">Join our energetic group classes for a fun and motivating workout experience.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i> Various class types</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Motivating atmosphere</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Social interaction</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer text-center">
-                        <h5>$35/month</h5>
-                    </div>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
 
-        <!-- Contact Section -->
-        <div class="row mt-4">
-            <div class="col-md-8 offset-md-2">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h4>Interested in our programs?</h4>
-                        <p>Contact us for a free consultation and trial session!</p>
-                        <a href="tel:+25261XXXXXXX" class="btn btn-primary me-2">
-                            <i class="fas fa-phone"></i> Call Us
-                        </a>
-                        <a href="mailto:info@somalifitness.com" class="btn btn-secondary">
-                            <i class="fas fa-envelope"></i> Email Us
-                        </a>
-                    </div>
+        <!-- Admin: Add New Course -->
+        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4>Add New Course</h4>
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Course Name</label>
+                            <input type="text" name="name" id="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" name="price" id="price" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="icon" class="form-label">Icon (FontAwesome Class)</label>
+                            <input type="text" name="icon" id="icon" class="form-control" required>
+                        </div>
+                        <button type="submit" name="add_course" class="btn btn-primary">Add Course</button>
+                    </form>
                 </div>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
